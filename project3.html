@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang='en'>
+<head>
+<title>Project 3 - Canvas Animation</title>
+<meta charset='utf-8'>
+<style>
+canvas {
+	border: 1px solid black;
+}
+</style>
+<script>
+/*
+•Change the starting points of all particles to emit from the center of the canvas
+•Adjust the initial radius to 30
+•Change the moveParticles function so that particles gradually decrease in size and disappear
+•Add an additional timer to the window.onload function to call makeParticles every 4500 seconds
+•When working, your new particle system should resemble a firework, and should pause briefly with each iteration. Change the colors and shapes of the particles to vary the design.
+*/
+
+var canvas;
+var context;
+var particles = [];
+var rectangles = [];
+var timer;
+var timer2;
+var timer3;
+
+function makeParticles() {
+		particles.push(new Particle());
+}
+
+function degreesToRadians(degrees) {
+	return(degrees * Math.PI)/180;
+}
+
+
+function Particle() {
+	this.x = Math.random() * canvas.width;
+	this.y = Math.random() * canvas.height;
+	this.vx = 10-5;
+	this.vy = 10-7;
+	
+	
+	this.color = 'white';
+	this.radius = 20;
+}
+
+function drawRect() {
+	var x = 200;
+	var y = 0;
+	//context.globalCompositeOperation = 'destination-over';
+	context.fillStyle = 'blue';
+
+	context.beginPath();
+	context.rect(x, y, canvas.width, canvas.height);
+	context.fillRect(x, y,100,100);
+    context.clearRect(x, y,60,60);
+    context.strokeRect(x, y,50,50);
+}
+
+function drawFrame() {
+
+	context.fillStyle = 'rgba(0, 0, 0, 0.3)';
+	context.fillRect(0, 0, canvas.width, canvas.height);
+	makeParticles();
+	drawSnow();	
+	drawTri();
+	drawMoon();
+}
+function drawSnow() {
+
+	//You can manipulate the globalCompositeOperation anyway you like.
+	/*context.globalCompositeOperation = 'source-over';
+	context.fillStyle = 'rgba(0, 0, 0, 0.3)';
+	context.fillRect(0, 0, canvas.width, canvas.height);
+	context.globalCompositeOperation = 'lighter';*/
+	
+	
+	for(var i = 0; i<particles.length; i++) {
+		var p = particles[i];
+		context.beginPath();
+		context.arc(p.x, p.y, p.radius, 20, degreesToRadians(360), true);
+		context.fillStyle = p.color;
+		context.fill();
+		
+		
+		if(p.radius > 0){
+			p.radius -= .5;
+		}
+		p.x += p.vx;
+		p.y += p.vy;
+		
+		//Prevent the particles from going offscreen with these IFs statements.
+		if(p.x < -50) p.x = canvas.width + 50;
+		if(p.y < -50) p.y = canvas.height + 50;
+		if(p.x > canvas.width + 50) p.x = -50;
+		if(p.y > canvas.height + 50) p.y = -50;
+	}
+
+}
+
+function drawTri() {
+	context.beginPath();
+	context.moveTo(65, 100);
+	context.lineTo(150, 235);
+	context.lineTo(90, 125);
+	context.strokeStyle = 'white';
+	context.stroke();
+	context.fillStyle = 'purple';
+	context.fill();
+	
+	context.moveTo(180, 110);
+	context.lineTo(170, 250);
+	context.lineTo(110, 140);
+	context.closePath();
+	context.fill();
+	
+}
+
+function drawStar() {
+	context.beginPath();
+	context.moveTo(100, 50);
+	context.lineTo(105, 10);
+	context.lineTo(110, 50);
+	context.lineTo(150, 55);
+	context.lineTo(110, 60);
+	context.lineTo(105, 100);
+	context.lineTo(100, 60);
+	context.lineTo(60, 55);
+	context.lineTo(100, 50);
+	context.strokeStyle = 'white';
+	context.stroke();
+	context.fillStyle = 'yellow';
+	context.fill();
+}
+
+function drawMoon() {
+	//context.globalCompositeOperation('lighter');
+	context.beginPath();
+	context.arc(370, 80, 70, 0, Math.PI/2, true);
+	context.fillStyle = 'white';
+	context.fill();
+	
+}
+
+function drawText() {
+	context.font = '40px Verdana';
+	context.strokeText('Life is...a thing now', 10, 350);
+	content.fillStyle = 'white';
+	content.fill();
+	
+}
+
+window.onload = function() {
+//one timer that works with different things at different intervals
+
+	canvas = document.getElementById('canvas');
+	context = canvas.getContext('2d');
+	timer = setInterval(drawFrame, 310);
+	timer = setInterval(drawRect, 1800);
+	timer = setInterval(drawStar, 2000);
+	timer = setTimeout(drawText, 4500);
+	
+
+}
+
+</script>
+</head>
+<body>
+	<canvas id='canvas' width='500' height='400'></canvas>
+
+</body>
+</html>
